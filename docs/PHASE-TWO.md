@@ -9,3 +9,9 @@ Hostel: separate opt-in profile with self-declared hostel residency/name, intere
 Architecture stays Vinext/React + Sites identity + D1. Existing JSON record storage can represent project teams, connections, blocks and OAuth state without changing tables. Alternate proposal of another independent social profile database was rejected as unnecessary duplication.
 
 OAuth research and deployment requirements: see PESU-AUTH-RESEARCH.md. The platform's owner-private access remains unchanged. Only an account-linking adapter is prepared; a provider-issued registered client is still required and the live consent flow is untested.
+
+## Availability revision
+
+Hostel discovery now uses one explicit “Available for a roommate” switch. No listing or public roommate request is created. Profile only asks whether the student lives in a hostel; hostel name and sleep preferences have been removed from the workflow and recommendation payload. Existing opt-in choices are retained; normal profile edits preserve availability. Recommendations require both residents to be available, at the same campus, and to share at least one declared interest. Private conversation invitations still require mutual acceptance. Unavailable residents cannot view or appear in recommendations.
+
+Club workspace has an admin-only “Club access requests” inbox with requester name, campus, request time and approve/decline. Pending counts appear in sidebar and notification dialog. Members see their own pending/declined status; approved members can publish. Platform site access remains owner-private during the pilot, so other organisers need appropriate site access before they can submit a real request.
