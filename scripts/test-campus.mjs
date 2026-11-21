@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 const base=process.env.TEST_BASE||'http://127.0.0.1:8787';
 const stamp=Date.now();const leader='qa-leader-'+stamp,member='qa-member-'+stamp,outsider='qa-outsider-'+stamp;
-async function call(user,action,values={},status=200){const r=await fetch(base+'/api/campus',{method:action?'POST':'GET',headers:{'oai-authenticated-user-id':user,'oai-authenticated-user-email':user+'@example.test','content-type':'application/json'},...(action?{body:JSON.stringify({action,...values})}:{})});const data=await r.json();assert.equal(r.status,status,JSON.stringify(data));return data;}
+async function call(user,action,values={},status=200){const r=await fetch(base+'/api/campus',{method:action?'POST':'GET',headers:{'oai-authenticated-user-id':user,'oai-authenticated-user-email':user+'@example.test','content-type':'application/json'},...(action?{body:JSON.stringify({action,...(action==='register'?{registrationName:'QA Student',registrationEmail:'qa@example.test',confirm:true}:{}),...values})}:{})});const data=await r.json();assert.equal(r.status,status,JSON.stringify(data));return data;}
 const unauth=await fetch(base+'/api/campus');assert.equal(unauth.status,401);
 for(const id of [leader,member,outsider])await call(id,'profile',{name:id,campus:'RR',year:'2',branch:'CSE',interests:'Design'});
 let state=await call(leader);const isAdmin=state.user.admin;
@@ -23,5 +23,5 @@ await call(outsider,'join',{team:team.id});state=await call(leader);const extra=
 await call(leader,'register',{event:event.id,team:team.id});await call(leader,'register',{event:event.id,team:team.id});state=await call(leader);assert.equal(state.registrations.filter(x=>x.event===event.id).length,1);
 await call(outsider,'registrants',{id:event.id},403);const rows=await call(leader,'registrants',{id:event.id});assert.equal(rows.rows.length,1);
 await call(leader,'toggleEvent',{id:event.id});await call(member,'register',{event:event.id,team:team.id},400);
-await call(leader,'activity',{title:'QA badminton',category:'Sports',date:future,venue:'Court',spots:2,campus:'RR'});state=await call(leader);const activity=state.activities.find(x=>x.title==='QA badminton');await call(member,'joinActivity',{id:activity.id});await call(outsider,'joinActivity',{id:activity.id},409);await call(member,'joinActivity',{id:activity.id});
+await call(leader,'activity',{title:'QA badminton',category:'Sports',date:future,venue:'Court',spots:2,campus:'RR'});state=await call(leader);const activity=state.activities.find(x=>x.title==='QA badminton');await call(member,'joinActivity',{id:activity.id});const activityRequest=(await call(leader)).conversations.find(c=>c.activity===activity.id);await call(leader,'activityDecision',{id:activityRequest.requestId,accept:true});await call(outsider,'joinActivity',{id:activity.id},409);await call(member,'joinActivity',{id:activity.id});
 console.log('PASS: identity, club permissions, event publishing, team requests, capacity, private chat, registration, deduplication, closure, organiser-only data and activity capacity.');
