@@ -131,3 +131,12 @@ The portable build runs Vinext directly without a host `timeout` command. The ma
 
 - [vinext Documentation](https://github.com/cloudflare/vinext)
 - [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+
+
+## Campus Connect administrator key
+
+Configure the hosted secret `CAMPUS_ADMIN_KEY_HASH` with the SHA-256 digest of a strong random key, encoded as base64url (43 characters). Keep the plaintext key in the owner's password manager; never put it in source, client code or a tracked environment file. The production secret is managed through Sites runtime configuration, and a new deployment applies a change. For local development use a separate test key and an ignored local environment file supported by the runtime.
+
+`/admin` posts the key to `/api/admin/login`. The server rate-limits attempts, compares digests, and sets an HttpOnly, Secure, SameSite=Strict cookie. Only token digests are stored, sessions expire after six hours, and the key digest version is checked on every admin request. `/api/admin/logout` revokes the current session. Rotating the configured digest revokes all prior admin sessions. Keep `/api/roommate-admin` checks tied to this key session; neither PESU nor the old named platform account is an administrator.
+
+Demo data now lives under `scripts/fixtures` for regression checks only. The website imports no demo fixture, seeds no examples, and ignores old demo query parameters. Preserve real team/activity requests and chat workflows when editing empty states.

@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {stripTypeScriptTypes} from 'node:module';
-const source=readFileSync(new URL('../lib/demo.ts',import.meta.url),'utf8').replace("'./discovery'",JSON.stringify(new URL('../lib/discovery.ts',import.meta.url).href));
-const prepared=source.replace("'./conversations'",JSON.stringify(new URL('../lib/conversations.ts',import.meta.url).href)).replace("'./registration'",JSON.stringify(new URL('../lib/registration.ts',import.meta.url).href));
+const source=readFileSync(new URL('./fixtures/demo.ts',import.meta.url),'utf8').replace("'../../lib/discovery'",JSON.stringify(new URL('../lib/discovery.ts',import.meta.url).href));
+const prepared=source.replace("'../../lib/conversations'",JSON.stringify(new URL('../lib/conversations.ts',import.meta.url).href)).replace("'../../lib/registration'",JSON.stringify(new URL('../lib/registration.ts',import.meta.url).href));
 const {seedDemo,demoView,demoAction}=await import('data:text/javascript;base64,'+Buffer.from(stripTypeScriptTypes(prepared)).toString('base64'));
 const s=seedDemo();const act=(a,v)=>demoAction(s,a,{...(a==='register'?{registrationName:'Demo Student',registrationEmail:'demo@example.test',confirm:true,answers:{project:'An accessible map',track:'Accessibility',year:'3'}}:{}),...v});assert.equal(demoView(s).events.length,5);assert.equal(demoView(s).user.admin,false);
 s.active='demo-student';act('requestMessage',{conversation:'team:demo-team:demo-student',text:'Can we discuss first?'});assert.equal(s.members.find(m=>m.id==='demo-team:demo-student').status,'pending');assert.throws(()=>demoAction(s,'register',{event:'demo-workshop'}),/name|email|confirm/i);s.active='demo-resident';assert.ok(!demoView(s).requestMessages.some(m=>m.conversation==='team:demo-team:demo-student'));assert.throws(()=>act('requestMessage',{conversation:'team:demo-team:demo-student',text:'No access'}),/unavailable/);s.active='demo-leader';act('requestMessage',{conversation:'team:demo-team:demo-student',text:'Let us discuss expectations.'});

@@ -1,6 +1,6 @@
-import {conversations,canDiscuss} from './conversations';
-import {registrationFields,validateRegistration} from './registration';
-import {hostelCandidates,publicProfile,isDiscoverable,socialUrl} from './discovery';
+import {conversations,canDiscuss} from '../../lib/conversations';
+import {registrationFields,validateRegistration} from '../../lib/registration';
+import {hostelCandidates,publicProfile,isDiscoverable,socialUrl} from '../../lib/discovery';
 type Row=Record<string,any>;
 export type DemoStore={version:2;active:string;records:Row[];members:Row[];registrations:Row[]};
 export const demoRoles=[{id:'demo-admin',label:'Admin · Aditi'},{id:'demo-organiser',label:'Organiser · Rohan'},{id:'demo-leader',label:'Team leader · Ananya'},{id:'demo-student',label:'Student · Kabir'},{id:'demo-member',label:'Invited teammate · Meera'},{id:'demo-resident',label:'Hostel resident · Arjun'}];
