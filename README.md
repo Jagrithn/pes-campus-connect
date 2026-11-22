@@ -16,7 +16,7 @@ The new **[PESU Login page](https://pes-campus-connect.lushgibbon4.chatgpt.site/
 
 **A successful sign-in with a real student account still needs to be tested.** The connection follows PESU Academy’s mobile service, which can change without notice. Checks using simulated PESU responses pass, and the Academy endpoint is reachable; that does not prove a real student login has succeeded.
 
-You can also choose **Explore the draft** inside Roommate Finder to try its questions and fictional suggestions. The wider **Try demo** experience stays separate from real student records.
+Sign-in is required before any campus page opens, including demo links. After signing in, **Try demo** uses fictional people and events, separate from real student records.
 
 The right-side illustration has been removed. Roommate questions now appear in a centred card inside the Campus Connect layout.
 
@@ -106,3 +106,15 @@ Whenever changes are made:
 **GitHub repository:** [Jagrithn/pes-campus-connect](https://github.com/Jagrithn/pes-campus-connect). This is a separate private repository for Campus Connect. It is independent of the JARVIS project. Future completed changes should be pushed here after checks.
 
 Last updated: **23 November 2026**.
+
+
+## Latest update: sign in, then find your people
+
+- Every student app page requires PESU sign-in. Opening a direct campus, roommate or club link first takes signed-out visitors to the matching login page.
+- The login now uses the same navy, coral and cream design as Campus Connect. A small **Club login** link opens a separate organiser entrance. The administrator keeps separate owner sign-in.
+- On your first visit, Roommate Finder explains how it works and asks whether you want a roommate. **Not right now** skips setup and keeps your profile out of recommendations. You can start later from the sidebar.
+- The 12 centred question cards accept short custom answers as well as the suggested choices. Your selected priorities determine each topic’s weight. Shared words and a small list of known synonyms help compare custom answers; this is not a promise that every phrase has been understood. Contradictory phrases are not treated as shared interests. General “Other” answers do not earn a match.
+- View several recommendations, read profiles and send a hello. Chat starts after the other person accepts. **Other recommendations** takes you straight back to browsing.
+- Club management has moved out of the student sidebar into **/clubs**. Club members request approval; the owner reviews requests in **/admin**. Approved organisers can publish events, open or close registrations and view participant details. Club login uses each organiser’s own PESU credentials, not a shared club password.
+
+The automated checks cover page access, custom-answer comparisons, saved roommate choices, owner-only club approval and private chat. A real student still needs to verify PESU sign-in; simulated login checks and endpoint connectivity alone cannot confirm it.

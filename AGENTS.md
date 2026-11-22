@@ -11,3 +11,5 @@
 - Students now use the direct SRN/password form at /login, verified by the server against PESU Academy. It does not require a third-party OAuth client. Do not claim successful real-student login until an authorised account test has succeeded. Preserve clear distinctions between the fictional draft preview and real student features.
 
 - Campus Connect is the homepage. Keep Roommate Finder integrated into its navigation and layout. Do not replace the whole app with the roommate feature. The roommate illustration is removed; questionnaire cards must remain centred.
+
+- Require a valid PESU session on every student app page before rendering content. Keep /login and /clubs/login public. Club publishing belongs at /clubs with owner-approved access; remove Club workspace from student navigation. Roommate setup starts with an introduction and explicit search choice, allows short custom answers, and preserves mutual consent before chat.

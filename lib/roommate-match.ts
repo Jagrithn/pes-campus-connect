@@ -1,5 +1,6 @@
 export const BLOCKS=['EB1','NBX','IT','EB2','EB3','MM','Mess Block','IH','Other'];
 export const TOPICS=['Free time','Conversations','Interests','Roommate bond','Languages','Routine','Room atmosphere','Academic circle','Room preferences'];
+export const CUSTOM_FIELDS=new Set(['hostel','blocks','freeTime','talk','interests','bond','wantedBond','languages','wantedLanguages','routine','wantedRoutine','atmosphere','wantedAtmosphere','focus','visitors','wantedVisitors','sharing','communication']);
 export const QUESTIONS=[
  {title:'First, are you a hostel person?',subtitle:'A little context. A much better match.',fields:[{key:'hostelite',label:'Do you currently live in a PES hostel?',options:['Yes','No']},{key:'hostel',label:'Your current hostel block',options:BLOCKS}]},
  {title:'Where would you feel at home?',subtitle:'Two people or a whole little gang? Your call.',fields:[{key:'blocks',label:'Blocks you would consider',options:BLOCKS,multi:true},{key:'occupancy',label:'Preferred total people in the room',options:['2','3','4','5','6'],multi:true}]},
@@ -16,9 +17,13 @@ export const QUESTIONS=[
 ] as const;
 export type RoomProfile={id:string;name:string;campus:string;branch?:string;year?:string;section?:string;semester?:string;answers:Record<string,string[]>;weights:Record<string,number>;must:string[];available:boolean;bio?:string;github?:string;linkedin?:string};
 export const answer=(p:RoomProfile,k:string)=>p.answers?.[k]||[];
-const overlap=(a:string[],b:string[])=>[...new Set(a)].filter(x=>b.includes(x));
-const similarity=(a:string[],b:string[])=>a.length&&b.length?overlap(a,b).length/Math.min(new Set(a).size,new Set(b).size):null;
-const acceptable=(habits:string[],wanted:string[],any?:string)=>!habits.length||!wanted.length?null:any&&wanted.includes(any)?1:habits.some(x=>wanted.includes(x))?1:0;
+const aliases:Record<string,string>={'f1':'formula one','formula 1':'formula one','formula1':'formula one','soccer':'football','working out':'fitness','workout':'fitness','gym':'fitness','programming':'coding','video games':'gaming','videogames':'gaming','movies':'films','movie':'films','hindi language':'hindi','english language':'english'};
+const normal=(s:string)=>{const t=s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^\p{L}\p{N}\s]/gu,' ').replace(/\s+/g,' ').trim();return aliases[t]||t};
+const stops=new Set(['i','me','my','we','our','the','a','an','and','or','to','of','in','at','with','for','like','love','enjoy','playing','watching','about','really','usually','after','class','time']);
+const negation=(s:string)=>/\b(no|not|never|hate|dislike|avoid|don t|dont)\b/.test(s);
+export function answerFit(left:string,right:string){const a=normal(left),b=normal(right);if(!a||!b||a==='other'||b==='other')return 0;if(a===b)return 1;if(!a||!b||negation(a)||negation(b))return 0;const tokens=(s:string)=>new Set(s.split(' ').filter(x=>!stops.has(x)));const aa=tokens(a),bb=tokens(b);if(!aa.size||!bb.size)return 0;const shared=[...aa].filter(x=>bb.has(x)).length;const jaccard=shared/new Set([...aa,...bb]).size;return jaccard>=.5?jaccard:0}
+const similarity=(a:string[],b:string[])=>{if(!a.length||!b.length)return null;const aa=[...new Set(a.map(normal))],bb=[...new Set(b.map(normal))];const pairs=aa.flatMap((x,i)=>bb.map((y,j)=>({i,j,fit:answerFit(x,y)}))).sort((x,y)=>y.fit-x.fit);const usedA=new Set<number>(),usedB=new Set<number>();let total=0;for(const p of pairs)if(p.fit>0&&!usedA.has(p.i)&&!usedB.has(p.j)){total+=p.fit;usedA.add(p.i);usedB.add(p.j)}return Math.min(1,total/Math.min(aa.length,bb.length))};
+const acceptable=(habits:string[],wanted:string[],any?:string)=>!habits.length||!wanted.length?null:any&&wanted.includes(any)?1:Math.max(...habits.flatMap(h=>wanted.map(w=>answerFit(h,w))));
 export function topicFit(a:RoomProfile,b:RoomProfile,topic:string):number|null{
  const av=(k:string)=>answer(a,k),bv=(k:string)=>answer(b,k);
  switch(topic){
@@ -41,7 +46,7 @@ export function match(a:RoomProfile,b:RoomProfile){if(a.id===b.id||!a.available|
  return {profile:b,score,yourFit:ab.score,theirFit:ba.score,coverage:Math.min(ab.coverage,ba.coverage),reasons:ab.reasons,discuss:ab.discuss};
 }
 export function normaliseRoomProfile(raw:any,identity:Partial<RoomProfile>&{id:string}):RoomProfile{
- const answers:Record<string,string[]>={};for(const q of QUESTIONS)for(const f of q.fields){const field=f as {key:string;options:readonly string[];multi?:boolean};const val=raw.answers?.[field.key];answers[field.key]=Array.isArray(val)?[...new Set(val.filter((x:unknown)=>typeof x==='string'&&field.options.includes(x)))].slice(0,field.multi?5:1) as string[]:[]}
+ const answers:Record<string,string[]>={};for(const q of QUESTIONS)for(const f of q.fields){const field=f as {key:string;options:readonly string[];multi?:boolean};const val=raw.answers?.[field.key];answers[field.key]=Array.isArray(val)?[...new Set(val.filter((x:unknown)=>typeof x==='string').map((x:string)=>x.trim().replace(/\s+/g,' ').slice(0,80)).filter((x:string)=>field.options.includes(x)||(CUSTOM_FIELDS.has(field.key)&&x.length>=2)))].slice(0,field.multi?5:1) as string[]:[]}
  const weights:Record<string,number>={};for(const t of TOPICS)weights[t]=Number.isInteger(raw.weights?.[t])?Math.max(0,Math.min(3,raw.weights[t])):1;
  const must=Array.isArray(raw.must)?TOPICS.filter(t=>raw.must.includes(t)):[];
  const name=String(identity.name||'Student').slice(0,100),campus=String(identity.campus||'');

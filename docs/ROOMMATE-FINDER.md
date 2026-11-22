@@ -52,3 +52,6 @@ Runtime keys: PESU_OAUTH_CLIENT_ID and, if confidential, PESU_OAUTH_CLIENT_SECRE
 
 ## Validation
 node scripts/test-roommate-finder.mjs executes matching and API routes against in-memory SQLite via a test-only Cloudflare binding adapter, including simulated provider callback responses. Covers personal priorities, bidirectional must-haves, missing answers, duplicate-score bounds, trusted identity, origins, request acceptance, chat isolation, multiple connections, blocking, opt-out, owner moderation, PKCE/state replay and token/identifier minimisation. This is not a live provider test. TypeScript and production build are also required. Desktop and 390px-wide browser checks cover the questionnaire, match list, profile breakdown and availability.
+
+
+Current onboarding: all student pages require a PESU session. First visits show an introduction and a saved yes/no search choice. Declining pauses an existing profile. Custom descriptive answers are retained (80 characters, up to five per multi-choice field) and compared using normalized text, explicit synonyms and conservative word overlap, with negation guarded. Generic Other earns no similarity. Preset eligibility and room sizes stay controlled. Club tools are separate at /clubs; approval is owner-only at /admin.

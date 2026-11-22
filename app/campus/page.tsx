@@ -1,1 +1,1 @@
-export {default} from '../campus-ui';
+export {default,dynamic} from '../page';
