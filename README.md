@@ -1,133 +1,100 @@
-# vinext-starter
+# Campus Connect — Roommate Finder
 
-A clean full-stack starter running on [vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and Drizzle support.
+Find people you would actually enjoy sharing a hostel room with.
 
-## Prerequisites
+Roommate Finder helps PES University hostel students discover potential roommates through shared interests, everyday habits and personal preferences. Students decide what matters most, explore several suggestions, and choose whom to get to know.
 
-- Node.js `>=22.13.0`
-- Portable: Windows, macOS, or Linux; no Bash required
-- Managed Linux: managed Linux runtime with Bash, `flock`, `curl`, `sha256sum`, and GNU `timeout`
-- Git and `tar` (including Windows `tar.exe`) are required for publishing; portable publication does not require Bash
+[Open the website](https://pes-campus-connect.lushgibbon4.chatgpt.site)
 
-## Sites Lifecycle
+## What works right now?
 
-The Sites initializer copies the shared starter and selects managed-linux only when `SITES_MANAGED_LINUX_CONTAINER=1`; otherwise it selects portable. It saves the selection only in ignored `.sites-runtime/execution-profile.json`. Both profiles copy/configure first, then use the plugin's separate `install-dependencies.mjs` step to measure installation independently. Edit source under `app/` and follow the Sites skill for installation, preview, builds, and publishing.
+The first draft is published. Choose **Explore the draft** to try the questions and see suggestions featuring fictional students.
 
-Run `node <plugin-root>/scripts/configure-execution-profile.mjs` only when the profile is unknown for the current checkout and environment. Profile changes do not alter tracked source or require reinstalling otherwise-valid dependencies; restart an existing preview to use the new selection. Do not commit or upload `.sites-runtime/`.
+**Real PESU student sign-in is not active yet.** The connection needs registration details from the sign-in provider and a successful test with a real student. Until then, students cannot create real roommate profiles, send real connection requests or chat through this feature.
 
-This starter does not use `wrangler.jsonc`.
+The sign-in connection is community-run; this project is not an official PES University service.
 
-Publish archives outside the source checkout or under its ignored `outputs/` directory. Local `.env*`, `.dev.vars*`, TypeScript build state, and tool runtime directories are ignored; keep the hosting manifest, migrations, and authored scripts in source control.
+## Who is this for?
 
-`install:ci` runs `npm ci` once against the shared lockfile, disables parent-workspace discovery, and includes required dev/optional dependencies despite production/omit settings. Sharp defaults to prebuilt binaries unless explicitly configured otherwise. Do not overlap installers.
+This version is for students who currently live in a PES hostel. It does not ask about rent, budgets or finding a flat outside college.
 
-- **Portable:** Preserve host HOME, npm cache, registry, proxy, temporary paths, retry/concurrency settings, and lifecycle-script policy. Use `--prefer-offline --no-audit --no-fund`.
-- **Managed Linux:** Use the existing project-local HOME/cache/tmp setup and Linux install lock, tarball preflight, and timeout. Restore the image-seeded npm cache only when its lockfile hash matches; retain network fallback. Builds keep their existing timeout. These helpers are not invoked by the portable profile.
+Students can choose their preferred blocks: **EB1, NBX, IT, EB2, EB3, MM, Mess Block, IH or Other**. They can consider rooms shared by **2 to 6 people**.
 
-`scripts/sites-env.mjs` preserves the caller's HOME, npm cache, proxy, XDG, and temporary-directory configuration while defaulting Wrangler and Miniflare state to the checkout. If npm reports an unwritable cache, select a writable path with `npm_config_cache` for that install. The `dev` and `start` scripts also keep Wrangler logs inside the checkout. Generated `.sites-runtime/` and `.wrangler/` directories are disposable and ignored by Git.
+The app helps people find one another. It does not book rooms, confirm hostel eligibility or make official room allocations.
 
-On portable, `npm run dev` uses `vinext dev` with HMR, starting at port 5173. Vinext records the running server in ignored `.vinext/` state, rejects an ordinary duplicate launch, and recovers stale state after a stopped process; exactly simultaneous starts can race. Pass `--port <port>` or `--hostname <host>` after `npm run dev --` when needed; keep portable previews on loopback.
+## How it works
 
-For managed Linux browser QA, follow the Sites skill's managed preview reference. The daemon runs the project's Vite dev script with `--host 0.0.0.0 --port 4173 --strictPort`; use the CLI's returned URL. The ignored local profile survives the daemon's cleared environment.
+1. **Sign in with PESU.** Once activated, the connection will provide the student details available with your permission, such as your name, campus, branch and semester.
+2. **Answer 12 short cards.** Share your interests, favourite conversations, free-time activities, languages, routine and expectations of a roommate.
+3. **Choose your priorities.** Tell us what matters a little, what matters a lot and what you absolutely need.
+4. **Explore several suggestions.** Read profiles, compare preferences and keep a shortlist while you browse.
+5. **Send a hello.** If the other person accepts, chat privately inside the app. You can get to know several people before deciding.
 
-The portable profile simulates ChatGPT sign-in only for loopback development requests. Visit `/signin-with-chatgpt?return_to=/` to sign in as `local_seedy` (`seedy@sites.test`, display name `Seedy`) and `/signout-with-chatgpt?return_to=/` to sign out. The development cookie preserves that identity across server restarts. Mock auth is disabled in the managed-linux profile and is not included in production builds; hosted authentication remains dispatch-owned.
+Your questionnaire progress is saved on the device as you answer. You can return to edit your answers and turn your availability off.
 
-The Worker uses `vinext/server/fetch-handler`, including Vinext's config-aware image handling. After building, `npm start` runs that Worker locally through Wrangler on `127.0.0.1`, sharing `.wrangler/state` with dev preview and local D1 migrations; it does not deploy the site or simulate sign-in. Use the URL printed by the server. Pass `npm start -- --port <port>` to select a different built-preview port.
+## What are the questions like?
 
-Local previews use Miniflare's placeholder `Request.cf` metadata without a network lookup. Set `CLOUDFLARE_CF_FETCH_ENABLED=true` to opt into fetching preview metadata; this setting does not change hosted request metadata.
+- What would you do with a free evening and no deadlines?
+- What topic could you talk about for hours?
+- What do you enjoy doing outside class?
+- Do you want independent living, a friendly balance or a close friendship?
+- Which languages do you speak comfortably?
+- What routines and room atmosphere are you comfortable with?
+- Would you prefer someone from the same class, branch, year or academic cycle?
+- What boundaries would make sharing a room easier?
 
-Local tool usage metrics are disabled by default. Set `WRANGLER_SEND_METRICS=true` to opt in.
+There is no cleanliness question. Questions about visitors, borrowing and discussing problems help students understand each other before making a decision.
 
-## Included Shape
+## How are people matched?
 
-- edit site code under `app/`
-- `app/chatgpt-auth.ts` provides optional dispatch-owned ChatGPT sign-in helpers
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `worker/index.ts` is the production Worker entrypoint and preserves request-scoped connector bindings
-- `scripts/vite/` contains the maintained Vite integrations and the vendored Sites plugin license
-- `scripts/connector-preview/` contains the local connector preview Worker and session helpers
-- the remaining `scripts/` files select execution profiles and run installation, development, and builds; the plugin's helpers orchestrate the Sites lifecycle
-- `dist/` contains generated deployment output; `.vinext/`, `.wrangler/`, and `.sites-runtime/` contain ignored local tool state
-- `db/index.ts` reads the D1 binding from the Cloudflare Worker environment
-- `db/schema.ts` starts intentionally empty
-- `@cloudflare/workers-types` provides Worker types; `cloudflare-env.d.ts` declares optional `DB`/`BUCKET` bindings—update these declarations if binding names change
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+**Your priorities control your suggestions.** If shared interests matter more to you than similar sleeping times, they contribute more to your score.
 
-## Workspace Auth Headers
+The app checks both directions: how well someone fits your preferences, and how well you fit theirs. A requirement marked as a must-have must be met for both people. If an essential answer is missing, the app does not assume it is a match.
 
-Signed-in visitors receive both `oai-authenticated-user-id` and `oai-authenticated-user-email`. Private Sites require every visitor to sign in; public Sites may also have anonymous visitors, for whom neither header is present.
+Profiles show reasons for a suggestion, possible differences to discuss and how much information was available. A score describes the fit between declared answers; **it is not a promise that living together will work**.
 
-The user ID is stable for the same user on the same Site and different across Sites. Use it as the durable user key; use email and name for display or contact purposes.
+Students must both be available and on the same campus to appear as suggestions. Choosing a room for six does not automatically create a six-person group; you can explore and connect with several candidates yourself.
 
-SIWC-authenticated workspace sites may also receive `oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty `name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by `oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
+## What information is used?
 
-Treat the full name as optional and fall back to email when it is absent:
+- **PESU:** the basic student and academic details available through the sign-in connection, once activated. Missing details are not guessed. Hostel residency is currently stated by the student rather than confirmed by PESU.
+- **Your answers:** the habits, interests and preferences you choose to share.
+- **GitHub and LinkedIn:** optional profile links only. We do not read those profiles or use their content for matching.
 
-```tsx
-import { headers } from "next/headers";
+The app does not keep your PESU password. Students can pause availability, block a person or report a concern. Pausing availability stops discovery and conversation access. Blocking prevents the two people from appearing to each other and stops their chat access.
 
-export default async function Home() {
-  const requestHeaders = await headers();
-  const userId = requestHeaders.get("oai-authenticated-user-id");
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
+The draft preview stays separate from real student records. The shortlist currently lasts for the open app session.
 
-  const displayName = fullName ?? email;
-  // ...
-}
-```
+## Administrator access
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+[Open the admin page](https://pes-campus-connect.lushgibbon4.chatgpt.site/admin).
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs optional or required ChatGPT sign-in:
+Jagrith has a separate sign-in for checking profile counts, reviewing reports and hiding or restoring profiles. Students use PESU sign-in; the administrator uses the existing owner account. Administrator access does not include reading private chats.
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use the returned `userId` as the stable user key for user-owned records; do not use email as a durable identifier.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send anonymous visitors through Sign in with ChatGPT.
-- In a Server Component, start sign-in with `<a href={chatGPTSignInPath(returnTo)} target="_top">`. The auth helper module is server-only; do not import it into a Client Component.
-- Do not use `fetch`, XHR, a client-side router, or a framework link that can prefetch the sign-in route. SIWC must start as a top-level navigation.
-- Never request the AuthAPI authorization endpoint directly. The dispatch-owned `/signin-with-chatgpt` route must start the SIWC flow.
-- Use `chatGPTSignOutPath(returnTo)` for browser sign-out links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because they depend on per-request identity headers.
+## What still needs finishing?
 
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the OAuth cookies, and identity header injection. Do not implement app routes for those reserved paths. Routes that do not import and call the helper remain anonymous-compatible.
+- Activate PESU sign-in and test it with an authorised student.
+- Confirm which student details are returned in practice.
+- Test the complete real-student journey before inviting hostel residents.
+- Improve matching using feedback from students who actually become roommates.
 
-SIWC establishes identity only; it does not prove workspace membership. Use the Sites hosting platform's access policy controls for workspace-wide restrictions, or enforce explicit server-side membership or allowlist checks.
+Events, clubs and the wider campus features are paused while Roommate Finder is the priority. The earlier campus dashboard remains at [/campus](https://pes-campus-connect.lushgibbon4.chatgpt.site/campus).
 
-Use SIWC for account pages, user-specific dashboards, saved records, and write actions tied to the current ChatGPT user. Leave public content anonymous.
+## For someone working on the code
 
-## Local D1 migrations
+The website files are in this folder. The main Roommate Finder screens are in `app/roommates/`; the matching rules are in `lib/roommate-match.ts`.
 
-For a D1-backed local preview, generate SQL with `npm run db:generate`. Build once through the Sites skill's build entrypoint (or `npm run build` for standalone use) to generate `dist/server/wrangler.json`, rebuilding if bindings change. From the project root, apply each pending migration in order:
+[Setup and running instructions](docs/DEVELOPER-SETUP.md) explain the tools and commands needed to work on it. [Roommate Finder implementation notes](docs/ROOMMATE-FINDER.md) explain the current behaviour and sign-in setup.
 
-```sh
-node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_example.sql
-```
+## Keeping this project up to date
 
-Replace the filename with the pending migration and `DB` with your D1 binding name if different. Use `.wrangler/state`, not `.wrangler/state/v3`; Wrangler adds the versioned directories. Do not replay migrations already applied locally. This updates only the preview database; publishing applies production migrations separately.
+Whenever changes are made:
 
-## Diagnostic Commands
+1. Update this README in plain English so someone new can understand what changed, what works and what is unfinished.
+2. Check the affected behaviour before saving the change.
+3. Save the changes in the project history and push them to its connected GitHub repository.
+4. Never upload passwords, private student records, local database copies or generated working files.
 
-- `npm run install:ci`: perform the one locked dependency install
-- `npm run dev`: start the Vite/Vinext development server
-- `npm run build`: build the deployable Sites artifact
-- `npm run start`: preview the built Worker locally with D1/R2 support
-- `npm run db:generate`: generate Drizzle migrations after schema changes
+**GitHub repository:** [Jagrithn/pes-campus-connect](https://github.com/Jagrithn/pes-campus-connect). This is a separate private repository for Campus Connect. It is independent of the JARVIS project. Future completed changes should be pushed here after checks.
 
-When using the Sites plugin, follow its skill instructions for installation, builds, and publishing. These npm commands remain available for standalone use.
-
-The portable build runs Vinext directly without a host `timeout` command. The managed-linux build uses `scripts/build-verified.sh` and its existing `SITES_BUILD_TIMEOUT` setting.
-
-## Learn More
-
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+Last updated: **23 November 2026**.
