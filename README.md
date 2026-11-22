@@ -28,7 +28,7 @@ Students can create teams, invite teammates, request to join teams or activities
 
 The separate **/admin** page now asks for a private administrator key. The previous named account and automatic account-based access have been removed. Student sign-in does not grant administrator access.
 
-The administrator can approve club requests, review reports, and hide or restore roommate profiles. Private chats are not shown in the admin dashboard. Admin sessions last up to six hours; signing out ends the session. Changing the configured key invalidates existing admin sessions.
+The administrator can approve club requests, review reports, hide or restore roommate profiles, and archive or restore event and team listings. Archiving an event also removes its teams from student browsing until the event is restored. Private chats are not shown in the admin dashboard. Admin sessions last up to six hours; signing out ends the session. Changing the configured key invalidates existing admin sessions.
 
 The key is provided privately to the owner and is never placed in this repository, browser code or README. See [developer setup](docs/DEVELOPER-SETUP.md) for configuration and rotation.
 
@@ -49,3 +49,5 @@ Checks cover matching priorities, custom answers, page access, private chat, key
 Campus Connect is an independent student project, not an official PES University service.
 
 Code is backed up in the separate private [pes-campus-connect repository](https://github.com/Jagrithn/pes-campus-connect). Completed changes are checked, published and pushed there. The JARVIS project is separate.
+
+Stored test listings can now be removed through the admin dashboard, including entries created manually while testing. This keeps real student sign-ins and the team/event workflows intact.

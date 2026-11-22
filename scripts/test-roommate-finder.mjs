@@ -110,3 +110,20 @@ const activity=sqlite.prepare("SELECT * FROM records WHERE kind='activity' LIMIT
 const requests=await (await campus.GET(campusReq())).json();const request=requests.conversations.find(c=>c.activity===activity.id);assert.equal(request.status,'pending');
 await campusAction(sessionCookie,'activityDecision',{id:request.requestId,accept:true});assert.ok(JSON.parse(sqlite.prepare('SELECT data FROM records WHERE id=?').get(activity.id).data).joined.includes('c'));
 console.log('PASS: real event publishing, team creation/invitations/join approval, accepted team chat, roster registration and activity request approval remain functional.');
+
+// Stored listings can be archived and restored without deleting accounts or workflows.
+const archiveToken='archive-regression-session';await S.putRoom('as:'+await load('lib/pesu-oauth.ts').digest(archiveToken),'adminSession','site-administrator',{expires:Date.now()+60000,version:env.CAMPUS_ADMIN_KEY_HASH});
+const archiveRequest=(id,kind,archived,cookie='campus_admin='+archiveToken)=>new Request(origin+'/api/roommate-admin',{method:'POST',headers:{origin,cookie},body:JSON.stringify({action:'archiveContent',id,kind,archived})});
+assert.equal((await A.POST(archiveRequest(published.event.id,'event',true,sessionCookie))).status,403);
+assert.equal((await A.POST(archiveRequest('b','profile',true))).status,400);
+assert.equal((await A.POST(archiveRequest('missing','team',true))).status,404);
+assert.equal((await A.POST(archiveRequest(published.event.id,'event',true))).status,200);
+const archivedView=await (await campus.GET(campusReq())).json();assert.ok(!archivedView.events.some(e=>e.id===published.event.id));assert.ok(!archivedView.teams.some(t=>t.id===team.id));assert.ok(!archivedView.members.some(m=>m.team===team.id));assert.ok(!archivedView.conversations.some(c=>c.team===team.id));assert.ok(!archivedView.registrations.some(r=>r.event===published.event.id));
+await campusAction('room_session='+tokens.c,'message',{team:team.id,text:'Archived team is unavailable.'},403);
+assert.ok(sqlite.prepare('SELECT id FROM records WHERE id=?').get(published.event.id),'Archive preserves stored data');
+assert.equal((await A.POST(archiveRequest(published.event.id,'event',false))).status,200);
+assert.ok((await (await campus.GET(campusReq())).json()).teams.some(t=>t.id===team.id));
+assert.equal((await A.POST(archiveRequest(team.id,'team',true))).status,200);assert.ok(!(await (await campus.GET(campusReq())).json()).teams.some(t=>t.id===team.id));
+assert.equal((await A.POST(archiveRequest(team.id,'team',false))).status,200);await campusAction('room_session='+tokens.c,'message',{team:team.id,text:'Restored team chat works.'});
+assert.equal((await (await campus.GET(campusReq())).json()).user.name,'Fictional Student','Listing removal must not remove the signed-in account');
+console.log('PASS: admin-only reversible listing archive, dependent team/registration/request isolation, direct action rejection and restoration with account/workflow preservation.');
