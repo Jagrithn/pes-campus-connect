@@ -1,3 +1,13 @@
+# Login transport correction — 23 November 2026
+
+The first direct-login release used redirect:error in both login and profile fetches. Cloudflare Workers rejects that mode during Request construction, before network I/O. It surfaced as the generic Could not reach PESU Academy error. Production logs showed POST /api/auth/pesu returning 503 in 611 ms. A real-workerd regression reproduced the exact 503 with zero upstream requests.
+
+Both calls now use redirect:manual. Existing non-OK status checks reject 3xx without following Location, so passwords and bearer tokens are not forwarded to another host. scripts/test-pesu-worker-runtime.mjs runs the actual production adapter in Miniflare/workerd at the deployed compatibility date, constructs real Worker Request objects around fixture responses, and checks success, rejection and redirect refusal. The earlier Node-only tests did not expose this runtime incompatibility.
+
+An owner-only GET /api/roommate-admin?check=pesu sends an empty username/password to Academy to check transport without accessing or guessing any student account. It returns status only, never the upstream response body, cookies or credentials. A 401 on this probe means the server reached PESU and PESU rejected the deliberately empty credentials; it does not prove a successful student login.
+
+Cloudflare reference: https://developers.cloudflare.com/workers/runtime-apis/request/ .
+
 # Integrated Roommate Finder update — 23 November 2026
 
 This update supersedes the earlier first-draft routing and OAuth requirements below.

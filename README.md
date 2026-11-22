@@ -12,6 +12,8 @@ The original Campus Connect dashboard is the homepage again. **Events, Teams, Me
 
 The new **[PESU Login page](https://pes-campus-connect.lushgibbon4.chatgpt.site/login)** asks for an SRN and password. Our server checks them directly with PESU Academy, then uses one student sign-in across the app. It does not need registration details from a separate sign-in provider. Passwords are not stored. Jagrith still has a separate administrator sign-in.
 
+**Login connection fix:** the first published form used an option unsupported by the hosting service. That stopped requests before they reached PESU. The option has been corrected, and a regression check now runs the login code in the actual server runtime.
+
 **A successful sign-in with a real student account still needs to be tested.** The connection follows PESU Academy’s mobile service, which can change without notice. Checks using simulated PESU responses pass, and the Academy endpoint is reachable; that does not prove a real student login has succeeded.
 
 You can also choose **Explore the draft** inside Roommate Finder to try its questions and fictional suggestions. The wider **Try demo** experience stays separate from real student records.

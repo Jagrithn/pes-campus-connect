@@ -1,5 +1,7 @@
 // Protocol adapted from pesu-dev/auth (MIT). See docs/PESU-AUTH-LICENSE.txt.
 // Credentials and Academy tokens stay in request memory; never log upstream bodies.
+// Workers rejects redirect:'error' before sending. Manual plus !response.ok rejects
+// redirects without forwarding passwords or tokens to a different destination.
 export const PESU_LOGIN='https://www.pesuacademy.com/MAcademy/mobile/mobilelogin/auth';
 export const PESU_PROFILE='https://www.pesuacademy.com/MAcademy/mobile/dispatcher';
 export class PesuError extends Error{constructor(message:string,public status=502){super(message)}}
@@ -8,7 +10,7 @@ async function object(r:Response){try{const p=await r.json();if(!p||typeof p!=='
 const form=(v:Record<string,string>)=>{const f=new FormData();for(const [k,x]of Object.entries(v))f.set(k,x);return f};
 export async function authenticatePesu(srn:string,password:string){
  let r:Response;
- try{r=await fetch(PESU_LOGIN,{method:'POST',headers:{'X-Client-Type':'MOBILE'},body:form({userName:srn,password,j_appId:'YES',instId:'1,6,7,14'}),redirect:'error',signal:AbortSignal.timeout(12000)})}catch{throw new PesuError('Could not reach PESU Academy. Please try again shortly.',503)}
+ try{r=await fetch(PESU_LOGIN,{method:'POST',headers:{'X-Client-Type':'MOBILE'},body:form({userName:srn,password,j_appId:'YES',instId:'1,6,7,14'}),redirect:'manual',signal:AbortSignal.timeout(12000)})}catch{throw new PesuError('Could not reach PESU Academy. Please try again shortly.',503)}
  if(r.status===401)throw new PesuError('PESU Academy did not accept that SRN and password.',401);
  if(!r.ok)throw new PesuError('PESU Academy is temporarily unavailable. Please try again later.');
  const login=await object(r);
@@ -16,7 +18,7 @@ export async function authenticatePesu(srn:string,password:string){
  // Preserve per-login cookies only for the same Academy host and this profile request.
  const cookieHeaders=typeof r.headers.getSetCookie==='function'?r.headers.getSetCookie():[r.headers.get('set-cookie')||''];
  const cookies=cookieHeaders.flatMap(v=>v.split(/,(?=\s*[^;,=]+=[^;,]*)/)).map(x=>x.split(';')[0].trim()).filter(Boolean).join('; ');
- let pr:Response;try{pr=await fetch(PESU_PROFILE,{method:'POST',headers:{'X-Client-Type':'MOBILE',Authorization:'Bearer '+login.accessToken,...(cookies?{Cookie:cookies}:{})},body:form({action:'27',mode:'1',menuId:'11172'}),redirect:'error',signal:AbortSignal.timeout(12000)})}catch{throw new PesuError('Signed in to PESU, but could not load your student profile. Please retry.',503)}
+ let pr:Response;try{pr=await fetch(PESU_PROFILE,{method:'POST',headers:{'X-Client-Type':'MOBILE',Authorization:'Bearer '+login.accessToken,...(cookies?{Cookie:cookies}:{})},body:form({action:'27',mode:'1',menuId:'11172'}),redirect:'manual',signal:AbortSignal.timeout(12000)})}catch{throw new PesuError('Signed in to PESU, but could not load your student profile. Please retry.',503)}
  if(!pr.ok)throw new PesuError('PESU Academy could not return your student profile. Please retry.');
  const profile=await object(pr),info=profile.STUDENT_INFO;
  if(!text(profile.MESSAGE).startsWith('SUCCESS')||!info||Array.isArray(info)||typeof info!=='object')throw new PesuError('PESU Academy’s student profile format has changed. Please try again later.');
