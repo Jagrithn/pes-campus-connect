@@ -1,1 +1,1 @@
-export {default} from './roommates/page';
+export {default} from './campus-ui';

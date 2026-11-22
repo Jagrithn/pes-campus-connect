@@ -8,4 +8,6 @@
 - Keep the Sites source publishing workflow intact. Follow the relevant Sites instructions when changing or publishing the hosted app. Do not confuse publishing with a GitHub backup.
 - Never commit secrets, raw student credentials, private student records, local databases, build output or local tool state. Check the proposed files before committing.
 - Prioritise hostel-only Roommate Finder over events. GitHub and LinkedIn are profile links only, with no extraction or scoring. Student login must be PESU-only; the administrator has separate owner access.
-- Do not claim PESU sign-in is active or tested until provider setup and a real consent flow have succeeded. Preserve clear distinctions between the fictional draft preview and real student features.
+- Students now use the direct SRN/password form at /login, verified by the server against PESU Academy. It does not require a third-party OAuth client. Do not claim successful real-student login until an authorised account test has succeeded. Preserve clear distinctions between the fictional draft preview and real student features.
+
+- Campus Connect is the homepage. Keep Roommate Finder integrated into its navigation and layout. Do not replace the whole app with the roommate feature. The roommate illustration is removed; questionnaire cards must remain centred.

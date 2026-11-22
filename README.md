@@ -1,6 +1,6 @@
-# Campus Connect — Roommate Finder
+# PES Campus Connect
 
-Find people you would actually enjoy sharing a hostel room with.
+Your campus events, teams, conversations and roommate search in one place.
 
 Roommate Finder helps PES University hostel students discover potential roommates through shared interests, everyday habits and personal preferences. Students decide what matters most, explore several suggestions, and choose whom to get to know.
 
@@ -8,11 +8,17 @@ Roommate Finder helps PES University hostel students discover potential roommate
 
 ## What works right now?
 
-The first draft is published. Choose **Explore the draft** to try the questions and see suggestions featuring fictional students.
+The original Campus Connect dashboard is the homepage again. **Events, Teams, Messages, Activities, Capstone and Club workspace are preserved.** Roommate Finder is part of the same app: select it in the navigation.
 
-**Real PESU student sign-in is not active yet.** The connection needs registration details from the sign-in provider and a successful test with a real student. Until then, students cannot create real roommate profiles, send real connection requests or chat through this feature.
+The new **[PESU Login page](https://pes-campus-connect.lushgibbon4.chatgpt.site/login)** asks for an SRN and password. Our server checks them directly with PESU Academy, then uses one student sign-in across the app. It does not need registration details from a separate sign-in provider. Passwords are not stored. Jagrith still has a separate administrator sign-in.
 
-The sign-in connection is community-run; this project is not an official PES University service.
+**A successful sign-in with a real student account still needs to be tested.** The connection follows PESU Academy’s mobile service, which can change without notice. Checks using simulated PESU responses pass, and the Academy endpoint is reachable; that does not prove a real student login has succeeded.
+
+You can also choose **Explore the draft** inside Roommate Finder to try its questions and fictional suggestions. The wider **Try demo** experience stays separate from real student records.
+
+The right-side illustration has been removed. Roommate questions now appear in a centred card inside the Campus Connect layout.
+
+This project is independent and is not an official PES University service.
 
 ## Who is this for?
 
@@ -24,7 +30,7 @@ The app helps people find one another. It does not book rooms, confirm hostel el
 
 ## How it works
 
-1. **Sign in with PESU.** Once activated, the connection will provide the student details available with your permission, such as your name, campus, branch and semester.
+1. **Use PESU Login.** Enter your SRN and Academy password. After successful verification, the app reads available student details such as your name, campus, branch and semester.
 2. **Answer 12 short cards.** Share your interests, favourite conversations, free-time activities, languages, routine and expectations of a roommate.
 3. **Choose your priorities.** Tell us what matters a little, what matters a lot and what you absolutely need.
 4. **Explore several suggestions.** Read profiles, compare preferences and keep a shortlist while you browse.
@@ -57,7 +63,7 @@ Students must both be available and on the same campus to appear as suggestions.
 
 ## What information is used?
 
-- **PESU:** the basic student and academic details available through the sign-in connection, once activated. Missing details are not guessed. Hostel residency is currently stated by the student rather than confirmed by PESU.
+- **PESU:** the basic student and academic details returned after a successful sign-in. Missing details are not guessed. Hostel residency is currently stated by the student rather than confirmed by PESU.
 - **Your answers:** the habits, interests and preferences you choose to share.
 - **GitHub and LinkedIn:** optional profile links only. We do not read those profiles or use their content for matching.
 
@@ -73,16 +79,16 @@ Jagrith has a separate sign-in for checking profile counts, reviewing reports an
 
 ## What still needs finishing?
 
-- Activate PESU sign-in and test it with an authorised student.
-- Confirm which student details are returned in practice.
-- Test the complete real-student journey before inviting hostel residents.
+- Test the new login with an authorised student’s real account.
+- Confirm which academic details PESU returns in practice.
+- Test the full real-student journey before inviting hostel residents.
 - Improve matching using feedback from students who actually become roommates.
 
-Events, clubs and the wider campus features are paused while Roommate Finder is the priority. The earlier campus dashboard remains at [/campus](https://pes-campus-connect.lushgibbon4.chatgpt.site/campus).
+Events and clubs remain available. New development is focused on Roommate Finder. The earlier `/campus` address also opens the campus dashboard. [/roommates](https://pes-campus-connect.lushgibbon4.chatgpt.site/roommates) opens Roommate Finder inside the main app.
 
 ## For someone working on the code
 
-The website files are in this folder. The main Roommate Finder screens are in `app/roommates/`; the matching rules are in `lib/roommate-match.ts`.
+The website files are in this folder. The shared campus interface is in `app/campus-ui.tsx`. Roommate Finder is in `app/roommate-finder.tsx`, and the matching rules are in `lib/roommate-match.ts`. The PESU Login screen is in `app/login/`, with server-side verification in `lib/pesu-direct.ts`.
 
 [Setup and running instructions](docs/DEVELOPER-SETUP.md) explain the tools and commands needed to work on it. [Roommate Finder implementation notes](docs/ROOMMATE-FINDER.md) explain the current behaviour and sign-in setup.
 

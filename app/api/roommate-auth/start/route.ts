@@ -1,5 +1,1 @@
-import {env} from 'cloudflare:workers';
-import {provider,config,digest} from '../../../../lib/pesu-oauth';
-import {putRoom,random} from '../../../../lib/roommate-server';
-export const dynamic='force-dynamic';
-export async function GET(req:Request){const c=config();if(!c.id)return Response.redirect(new URL('/?login=setup',req.url),303);if(!env.DB)return new Response('Database unavailable',{status:503});const state=random(),verifier=random()+random();await putRoom('ro:'+state,'roomOAuth','pending',{verifier,expires:Date.now()+600000});const url=new URL('/oauth2/authorize',provider);url.search=new URLSearchParams({response_type:'code',client_id:c.id,redirect_uri:new URL('/api/roommate-auth/callback',req.url).toString(),scope:'profile:basic profile:academic',state,code_challenge:await digest(verifier),code_challenge_method:'S256'}).toString();return new Response(null,{status:303,headers:{Location:url.toString(),'Set-Cookie':`room_oauth=${state}; Path=/api/roommate-auth; HttpOnly; Secure; SameSite=Lax; Max-Age=600`,'Cache-Control':'no-store'}})}
+export async function GET(req:Request){return Response.redirect(new URL('/login?next=/roommates',req.url),303)}

@@ -1,3 +1,24 @@
+# Integrated Roommate Finder update — 23 November 2026
+
+This update supersedes the earlier first-draft routing and OAuth requirements below.
+
+## Current app structure
+The original Campus Connect dashboard is served at / and /campus. Its navigation renders app/roommate-finder.tsx inside the existing app layout. /roommates redirects to /?section=roommates. The illustration and questionnaire-side copy are removed; cards are centred. The root-level demo forces Roommate Finder into its fictional preview too, so demo actions cannot accidentally write real roommate data.
+
+## Current student login
+/login is the PESU Login form with SRN and password. POST /api/auth/pesu validates input and origin, applies per-account and per-client attempt limits, and sends multipart credentials directly to https://www.pesuacademy.com/MAcademy/mobile/mobilelogin/auth . On SUCCESS with an accessToken, it retrieves the profile from the same Academy host’s /MAcademy/mobile/dispatcher endpoint. Known protocol constants and field names are adapted from MIT-licensed pesu-dev/auth, reviewed at commit fc491f9f1e1dd8655f3567f118e343bc3043104c. Copyright and licence are retained in PESU-AUTH-LICENSE.txt. No passwords are sent to the community-hosted service.
+
+The response must contain the submitted SRN or PRN and a successful profile marker. An opaque local session cookie is issued only after verification. Passwords, raw identifiers, provider tokens and unrelated personal details are not persisted or logged. Safe error messages never expose upstream responses. Student identity is derived from the returned profile, not editable request fields. Direct-login sessions rotate an existing cookie and expire after seven days.
+
+Campus and roommate APIs share the same PESU session. A basic campus profile is created or refreshed from verified academic details. Routine profile edits cannot overwrite those trusted fields. The old first-profile-becomes-admin path has been removed: the separate administrator is the verified platform owner only. Existing campus data is preserved. Old ChatGPT-owned student records are not automatically merged into a new PESU account.
+
+Legacy community OAuth callback/linking code is preserved for existing flows but is no longer a prerequisite or the student-facing login path. /api/roommate-auth/start now redirects to /login?next=/roommates.
+
+## Validation and honest limits
+The matching/API tests now also cover direct login success and failure with simulated Academy responses, trusted upstream host, credential/identifier non-retention, failed identity checks, throttling, shared campus sessions, immutable academic fields and prevention of first-student admin escalation. The Academy login endpoint answered an unauthenticated HEAD request with 405, confirming reachability only. No successful real-student password login has been observed yet. Do not call that end-to-end verified until an authorised student tests the live form.
+
+## Earlier first-draft record (historical)
+
 # Roommate Finder first draft — 22 November 2026
 
 Roommate Finder is now the home page, also served at /roommates. The previous campus dashboard is preserved at /campus; its renamed Roommate Finder navigation opens the new home page. Existing events and data are not migrated or deleted.

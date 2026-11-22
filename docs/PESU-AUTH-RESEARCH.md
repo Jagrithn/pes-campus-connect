@@ -1,3 +1,7 @@
+# Current decision — 23 November 2026
+
+The app now uses a direct SRN/password form at /login and a server-side adapter to PESU Academy’s own mobile login/profile endpoints. It no longer requires an external OAuth client to support student login. The original community OAuth research below is historical, not an activation checklist for the current form. See ROOMMATE-FINDER.md for the current implementation, licence attribution and test limits. A genuine student login is still unverified.
+
 # PESU Academy integration findings — 20 November 2026
 
 The live dashboard's public page script links to `https://github.com/Vision2822/pesu-dash` and the author `Vision2822`. Inspected source: Android repository, `PesuApiClient.kt` and `PesuApiService.kt`. It submits username/password to the university's MAcademy mobile endpoint, manages CSRF/cookies and session tokens. That is a credential-proxy/session technique, not an official university OAuth contract.
