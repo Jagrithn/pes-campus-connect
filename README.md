@@ -10,7 +10,7 @@ Sign in with your PESU SRN and password. The SRN field automatically uses capita
 
 On your first visit, Roommate Finder explains how it works and asks whether you are looking for a roommate. Choose **Not right now** to skip setup and keep your profile out of recommendations. You can start later from the sidebar.
 
-For help or to report a bug, email [pesucampusconnect@gmail.com](mailto:pesucampusconnect@gmail.com). The support links open your email app; existing in-app reports are still reviewed in the admin dashboard.
+For help or to report a bug, open **Support & report a bug** at the bottom of the app, or **Visit support** on the sign-in page. You can email [pesucampusconnect@gmail.com](mailto:pesucampusconnect@gmail.com). The support links open your email app; existing in-app reports are still reviewed in the admin dashboard.
 
 ## Roommate Finder
 
