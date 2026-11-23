@@ -6,7 +6,7 @@ A place for PES students to find campus events, build teams, make plans and meet
 
 ## Getting started
 
-Sign in with your PESU SRN and password. Sign-in is required before the student app opens. The server checks your credentials with PESU Academy and does not store your password. Basic academic details come from your verified student profile.
+Sign in with your PESU SRN and password. The SRN field automatically uses capital letters as you type or paste. Sign-in is required before the student app opens. The server checks your credentials with PESU Academy and does not store your password. Basic academic details come from your verified student profile.
 
 On your first visit, Roommate Finder explains how it works and asks whether you are looking for a roommate. Choose **Not right now** to skip setup and keep your profile out of recommendations. You can start later from the sidebar.
 
