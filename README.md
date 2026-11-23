@@ -10,6 +10,8 @@ Sign in with your PESU SRN and password. The SRN field automatically uses capita
 
 On your first visit, Roommate Finder explains how it works and asks whether you are looking for a roommate. Choose **Not right now** to skip setup and keep your profile out of recommendations. You can start later from the sidebar.
 
+For help or to report a bug, email [pesucampusconnect@gmail.com](mailto:pesucampusconnect@gmail.com). The support links open your email app; existing in-app reports are still reviewed in the admin dashboard.
+
 ## Roommate Finder
 
 This first version is for hostel residents. Answer 12 short question cards about your hostel block, room size, interests, languages, routines and the roommate you want. Add your own short answer when the suggested choices do not fit.
