@@ -10,7 +10,6 @@ export default function SupportPage() {
       <a className="support-button" href="mailto:pesucampusconnect@gmail.com?subject=Campus%20Connect%20support">Email support</a>
       <p className="support-address">Or write to <a href="mailto:pesucampusconnect@gmail.com">pesucampusconnect@gmail.com</a></p>
       <p className="support-note">Please don't include your PESU password in your message. The email button opens your email app; send the message from there.</p>
-      <div className="support-creator"><span>Made by Jagrith Neema</span><a href="https://github.com/Jagrithn" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
     </div>
   </main>;
 }

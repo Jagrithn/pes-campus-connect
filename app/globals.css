@@ -27,4 +27,4 @@
 
 .main-footer{flex-wrap:wrap;align-items:center}.main-footer a,.main-footer button{font-size:13px;color:#615d6b}.main-footer a:hover,.main-footer button:hover{color:#d95345}
 
-.sidebar .creator-intro strong{display:block;font-size:15px;color:#fff}.sidebar .creator-intro a{display:inline-block;margin:8px 14px 0 0;color:#fff;font-size:13px;text-decoration:underline;text-underline-offset:3px}.sidebar .creator-intro a:hover{color:#ff9c8e}
+.sidebar .side-foot a{color:#fff;font-size:13px;text-decoration:underline;text-underline-offset:3px}
