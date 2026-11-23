@@ -19,3 +19,5 @@
 
 .cc-login .cc-login-brand{padding-left:0;max-width:360px}.cc-login .cc-brand-title{font:500 40px/.98 var(--serif);margin:0;letter-spacing:-.7px}.cc-login .cc-pes-logo{width:64px;height:64px}.cc-login .cc-brand-lockup{gap:16px}.cc-login .cc-brand-tagline{font-size:12px;letter-spacing:1.4px;color:#f1f2f7}.cc-login .cc-login-story>small{color:#d8deea;font-size:13px;line-height:1.7}.cc-login .cc-login-footnote{color:#535f6e;font-size:13px}.cc-login .cc-login-links{font-size:14px;line-height:1.6;flex-wrap:wrap}.cc-login .rf-login-privacy{color:#535f6e}
 @media(max-width:760px){.cc-login .cc-brand-title{font-size:34px}.cc-login .cc-pes-logo{width:54px;height:54px}.cc-login .cc-login-story>small{display:block;margin-top:16px}.cc-login .cc-login-links{gap:12px}}
+
+.cc-login .login-creator{font-size:13px;line-height:1.6}.cc-login .login-creator a{display:inline-block;color:inherit;text-decoration:underline;text-underline-offset:3px;margin-left:4px}
