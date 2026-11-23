@@ -45,7 +45,7 @@ Completed on 23 November 2026. Scope: the student finder, matching rules, profil
 
 ## Verification
 
-- `npm test`: 37 targeted audit checks plus the existing matching, PESU-session, private-chat, administrator, club approval, real team/activity workflow and Worker login-adapter checks.
+- `npm test`: 38 targeted audit checks plus the existing matching, PESU-session, private-chat, administrator, club approval, real team/activity workflow and Worker login-adapter checks.
 - `tsc --noEmit`: type checks.
 - Production build before publication.
 - Browser checks with local synthetic accounts: all 12 cards, a custom topic, personal priorities, refresh/resume, publishing, multiple recommendations, connection acceptance, sending and receiving chat, draft preservation and editing. Mobile layout checked at 390 × 844 with no page-level horizontal overflow.

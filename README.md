@@ -60,6 +60,8 @@ Matching no longer treats one shared interest out of several as a complete match
 
 Repeated hellos reuse the existing request. Declined requests are not offered again as fresh matches. Blocked profiles can be reviewed and unblocked. Messages stay private to accepted, available connections, older messages can be loaded, and drafts stay in their own conversation. Pausing availability also pauses roommate chat.
 
-The audit added **37 targeted regression checks** alongside the existing account, matching, registration and permission checks. Run them with `npm test`. Browser checks covered all 12 question cards, custom answers, refresh recovery, profile publishing, recommendations, request acceptance, message delivery and mobile layouts. Only local fictional accounts were used for the browser checks; no demo data was added to the live app.
+The audit added **38 targeted regression checks** alongside the existing account, matching, registration and permission checks. Run them with `npm test`. Browser checks covered all 12 question cards, custom answers, refresh recovery, profile publishing, recommendations, request acceptance, message delivery and mobile layouts. Only local fictional accounts were used for the browser checks; no demo data was added to the live app.
 
 See [the audit findings](docs/ROOMMATE-AUDIT.md) for fixes, verification and remaining limitations.
+
+A final academic-data check also treats unrecognised semester labels as unknown, so they cannot satisfy a same-class requirement.
