@@ -65,3 +65,11 @@ The audit added **38 targeted regression checks** alongside the existing account
 See [the audit findings](docs/ROOMMATE-AUDIT.md) for fixes, verification and remaining limitations.
 
 A final academic-data check also treats unrecognised semester labels as unknown, so they cannot satisfy a same-class requirement.
+
+## PES logo and launch status
+
+The PES logo now replaces the decorative slash in the app sidebar and both login screens. It is saved with the website so it does not depend on loading an image from another site. The source is PES University's website: https://pes.edu/wp-content/uploads/2025/09/cropped-logowithwhitebgincircle-192x192.png. Campus Connect remains an independent student project.
+
+The sidebar tagline and lower text are brighter and larger. Long text can wrap, and the sidebar scrolls on shorter screens so its bottom links and notes remain reachable.
+
+The website is already online at the link above, with hosted storage for real profiles and messages. Before a wider student launch, verify real PESU sign-in on two accounts, test matching and chat between those accounts, then run a small hostel pilot. A custom domain can be added later: register a name you choose, attach it to this published site, and add the DNS records provided by the hosting service. The existing address continues to work without buying a domain.
