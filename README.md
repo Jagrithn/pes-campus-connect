@@ -34,6 +34,7 @@ The key is provided privately to the owner and is never placed in this repositor
 
 ## Latest changes
 
+- Cloudflare builds can select their own database using the `CAMPUS_D1_DATABASE_ID` and `CAMPUS_D1_DATABASE_NAME` build settings. Without them, the existing site keeps its original setup. The new database must also be prepared with the app's tables and its existing data migrated before the new site is ready to use.
 - Removed the demo switcher, fictional events, sample people, teams, requests and registrations from the live app.
 - Old demo links and saved demo choices no longer activate sample data.
 - Empty sections now wait for real student and organiser activity.
