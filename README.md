@@ -1,6 +1,6 @@
 # PES Campus Connect
 
-The website includes a Google Search Console verification tag so its owner can request that Google discover it.
+The website includes a Google Search Console verification tag and file so its owner can verify it and request that Google discover it.
 
 A place for PES students to find campus events, build teams, make plans and meet potential roommates.
 
