@@ -18,7 +18,8 @@ export async function POST(req:Request){
  const oldProfile=await env.DB.prepare("SELECT data FROM records WHERE id=? AND kind='profile'").bind(id).first();const previous=oldProfile?JSON.parse(String(oldProfile.data)):{};
  const campus=/electronic/i.test(academic.campus)?'EC':/ring road/i.test(academic.campus)?'RR':academic.campus;
  await putRoom(id,'profile',id,{...previous,name:academic.name,campus,branch:academic.branch,year:academic.year,section:academic.section,semester:academic.semester,interests:previous.interests||'',bio:previous.bio||'',pesuVerified:true});
- const oldRoom=await env.DB.prepare("SELECT data FROM records WHERE id=? AND kind='roomProfile'").bind('rp:'+id).first();if(oldRoom)await putRoom('rp:'+id,'roomProfile',id,{...JSON.parse(String(oldRoom.data)),...identity});
+ // Refresh only trusted identity fields, preserving the latest answers and moderation.
+ await env.DB.prepare("UPDATE records SET data=json_patch(data,?) WHERE id=? AND kind='roomProfile'").bind(JSON.stringify(identity),'rp:'+id).run();
  return new Response(JSON.stringify({ok:true}),{headers:{'Content-Type':'application/json','Cache-Control':'no-store','Set-Cookie':`room_session=${session}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=604800`}});
  }catch(e){return reply({error:e instanceof PesuError?e.message:'Unable to sign in. Please try again.'},e instanceof PesuError?e.status:400)}
 }
